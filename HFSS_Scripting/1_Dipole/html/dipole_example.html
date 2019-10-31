@@ -1,0 +1,386 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>dipole_example</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-02-25"><meta name="DC.source" content="dipole_example.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% Description:</span>
+<span class="comment">% ------------</span>
+<span class="comment">% A simple example to demonstrate the HFSS-MATLAB-API. This script</span>
+<span class="comment">% optimizes a dipole antenna design to resonate at a specified frequency.</span>
+<span class="comment">% The initial length of the dipole is taken to be half the wavelength and</span>
+<span class="comment">% is optimized so that the simulated resonance frequency and the desired</span>
+<span class="comment">% resonance frequency are close.</span>
+
+clc; clear <span class="string">all</span>; close <span class="string">all</span>;
+
+<span class="comment">% Add paths to the required m-files.</span>
+addpath(<span class="string">'E:\Documents\Classes\Spring-2019\EM Modelling\Project\Interfacing codes\hfss-api-master\examples\1_Dipole'</span>); <span class="comment">% add manually the API root directory.</span>
+hfssIncludePaths(<span class="string">'E:\Documents\Classes\Spring-2019\EM Modelling\Project\Simulation_HFSS'</span>);
+
+<span class="comment">% Antenna Parameters.</span>
+fC   = 150e6;    <span class="comment">% Frequency of Interest.</span>
+Wv   = 3e8/fC;    <span class="comment">% Wavelength.</span>
+L    = Wv/2;    <span class="comment">% Antenna Length.</span>
+gapL = 5e-2;    <span class="comment">% Antenna Gap.</span>
+aRad = 2e-2;    <span class="comment">% Antenna Radius.</span>
+
+<span class="comment">% Simulation Parameters.</span>
+fLow    = 100e6;
+fHigh   = 200e6;
+nPoints = 201;
+
+<span class="comment">% AirBox Parameters.</span>
+AirX = Wv/2 + L;    <span class="comment">% Include the antenna length.</span>
+AirY = Wv/2;
+AirZ = Wv/2;
+
+<span class="comment">% Temporary Files. These files can be deleted after the optimization</span>
+<span class="comment">% is complete. We have to specify the complete path for all of them.</span>
+<span class="comment">% With pwd we save them in the current directory.</span>
+tmpPrjFile    = [pwd, <span class="string">'\tmpDipole.hfss'</span>];
+tmpDataFile   = [pwd, <span class="string">'\tmpData.m'</span>];
+tmpScriptFile = [pwd, <span class="string">'\dipole_example.vbs'</span>];
+
+<span class="comment">% HFSS Executable Path.</span>
+hfssExePath = <span class="string">'E:\HFSSv15\HFSS15.0\Win64\hfss.exe'</span>;
+
+<span class="comment">% Plot Colors.</span>
+pltCols = [<span class="string">'b'</span>, <span class="string">'r'</span>, <span class="string">'k'</span>, <span class="string">'g'</span>, <span class="string">'m'</span>, <span class="string">'c'</span>, <span class="string">'y'</span>];
+nCols = length(pltCols);
+
+<span class="comment">% Optimization stop conditions.</span>
+maxIters = 15;        <span class="comment">% max # of iterations.</span>
+Accuracy = 0.01;      <span class="comment">% accuracy required (1%).</span>
+hasConverged = false;
+
+fprintf(<span class="string">'The Initial Dipole Length is %.2f meter...\n'</span>, L);
+<span class="keyword">for</span> iIters = 1:maxIters
+    fprintf(<span class="string">'Running iteration #%d...\n'</span>, iIters);
+    disp(<span class="string">'Creating the Script File...'</span>);
+
+    <span class="comment">% Create a new temporary HFSS script file.</span>
+    fid = fopen(tmpScriptFile, <span class="string">'wt'</span>);
+
+    <span class="comment">% Create a new HFSS Project and insert a new design.</span>
+    hfssNewProject(fid);
+    hfssInsertDesign(fid, <span class="string">'without_balun'</span>);
+
+    <span class="comment">% Create the Dipole.</span>
+    hfssDipole(fid, <span class="string">'Dipole'</span>, <span class="string">'X'</span>, [0, 0, 0], L, 2*aRad, gapL, <span class="string">'meter'</span>);
+
+    <span class="comment">% Assign PE boundary to the antenna elements.</span>
+    hfssAssignPE(fid, <span class="string">'Antennas'</span>,  {<span class="string">'Dipole1'</span>, <span class="string">'Dipole2'</span>});
+
+    <span class="comment">% Create a Lumped Gap Source (a rectangle normal to the Y-axis)</span>
+    hfssRectangle(fid, <span class="string">'GapSource'</span>, <span class="string">'Y'</span>, [-gapL/2, 0, -aRad], 2*aRad, <span class="keyword">...</span>
+        gapL, <span class="string">'meter'</span>);
+    hfssAssignLumpedPort(fid, <span class="string">'LumpedPort'</span>, <span class="string">'GapSource'</span>, <span class="keyword">...</span>
+        [-gapL/2, 0, 0], [gapL/2, 0, 0], <span class="string">'meter'</span>);
+
+    <span class="comment">% Add an AirBox.</span>
+    hfssBox(fid, <span class="string">'AirBox'</span>, [-AirX, -AirY, -AirZ]/2, [AirX, AirY, AirZ], <span class="keyword">...</span>
+        <span class="string">'meter'</span>);
+    hfssAssignRadiation(fid, <span class="string">'ABC'</span>, <span class="string">'AirBox'</span>);
+
+    <span class="comment">% Add a Solution Setup.</span>
+    hfssInsertSolution(fid, <span class="string">'Setup150MHz'</span>, fC/1e9);
+    hfssInterpolatingSweep(fid, <span class="string">'Sweep100to200MHz'</span>, <span class="string">'Setup150MHz'</span>, <span class="keyword">...</span>
+        fLow/1e9, fHigh/1e9, nPoints);
+
+    <span class="comment">% Save the project to a temporary file and solve it.</span>
+    hfssSaveProject(fid, tmpPrjFile, true);
+    hfssSolveSetup(fid, <span class="string">'Setup150MHz'</span>);
+
+    <span class="comment">% Export the Network data as an m-file.</span>
+    hfssExportNetworkData(fid, tmpDataFile, <span class="string">'Setup150MHz'</span>, <span class="keyword">...</span>
+        <span class="string">'Sweep100to200MHz'</span>);
+
+    <span class="comment">% Close the HFSS Script File.</span>
+    fclose(fid);
+
+    <span class="comment">% Execute the Script by starting HFSS.</span>
+    disp(<span class="string">'Solving using HFSS...'</span>);
+    hfssExecuteScript(hfssExePath, tmpScriptFile);
+
+    <span class="comment">% Load the data by running the exported matlab file.</span>
+    run(tmpDataFile);
+    tmpDataFile = [pwd, <span class="string">'\tmpData'</span>, num2str(iIters), <span class="string">'.m'</span>];
+
+    <span class="comment">% The data items are in the f, S, Z variables now.</span>
+    <span class="comment">% Plot the data.</span>
+    disp(<span class="string">'Solution Completed. Plotting Results for this iteration...'</span>);
+    figure(1);
+    hold <span class="string">on</span>; grid <span class="string">on</span>;
+    plot(f/1e6, 20*log10(abs(S)), pltCols(mod(iIters, nCols) + 1));
+    hold <span class="string">on</span>;
+    xlabel(<span class="string">'Frequency (MHz)'</span>);
+    ylabel(<span class="string">'S_{11} (dB)'</span>);
+    axis([fLow/1e6, fHigh/1e6, -20, 0]);
+
+    <span class="comment">% Find the Resonance Frequency.</span>
+    [Smin, iMin] = min(S);
+    fActual = f(iMin);
+    fprintf(<span class="string">'Simulated Resonance Frequency: %.2f MHz\n'</span>, fActual/1e6);
+
+    <span class="comment">% Check if the required accuracy is met.</span>
+    <span class="keyword">if</span> (abs((fC - fActual)/fC) &lt; Accuracy)
+        disp(<span class="string">'Required Accuracy is met!'</span>);
+        fprintf(<span class="string">'Optimized Antenna Length is %.2f meter.\n'</span>, L);
+        hasConverged = true;
+        <span class="keyword">break</span>;
+    <span class="keyword">end</span>
+
+    <span class="comment">% Adjust the antenna length in accordance with the discrepancy between</span>
+    <span class="comment">% the estimated and desired resonance frequency.</span>
+    L = L*fActual/fC;
+
+    <span class="comment">% Loop all over again ...</span>
+    disp(<span class="string">'Required accuracy not yet met ...'</span>);
+    fprintf(<span class="string">'The new estimate for the dipole length is %.2f meter\n'</span>, L);
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> (~hasConverged)
+    disp(<span class="string">'Max Iterations exceeded. Optimization did NOT converge ...'</span>);
+<span class="keyword">end</span>
+disp(<span class="string">''</span>);
+disp(<span class="string">''</span>);
+
+<span class="comment">% Remove all the added paths.</span>
+hfssRemovePaths(<span class="string">'../../'</span>);
+rmpath(<span class="string">'../../'</span>);
+</pre><pre class="codeoutput">Warning: Name is nonexistent or not a directory:
+E:\Documents\Classes\Spring-2019\EM Modelling\Project\Simulation_HFSSboundary 
+Warning: Name is nonexistent or not a directory:
+E:\Documents\Classes\Spring-2019\EM Modelling\Project\Simulation_HFSS3dmodeler 
+Warning: Name is nonexistent or not a directory:
+E:\Documents\Classes\Spring-2019\EM Modelling\Project\Simulation_HFSSanalysis 
+Warning: Name is nonexistent or not a directory:
+E:\Documents\Classes\Spring-2019\EM Modelling\Project\Simulation_HFSSgeneral 
+Warning: Name is nonexistent or not a directory:
+E:\Documents\Classes\Spring-2019\EM Modelling\Project\Simulation_HFSSradiation 
+Warning: Name is nonexistent or not a directory:
+E:\Documents\Classes\Spring-2019\EM Modelling\Project\Simulation_HFSSreporter 
+Warning: Name is nonexistent or not a directory:
+E:\Documents\Classes\Spring-2019\EM
+Modelling\Project\Simulation_HFSSfieldsCalculator 
+Warning: Name is nonexistent or not a directory:
+E:\Documents\Classes\Spring-2019\EM Modelling\Project\Simulation_HFSSmesh 
+The Initial Dipole Length is 1.00 meter...
+Running iteration #1...
+Creating the Script File...
+</pre><pre class="codeoutput error">Undefined function 'hfssNewProject' for input arguments of type 'double'.
+
+Error in dipole_example (line 60)
+    hfssNewProject(fid);
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% Description:
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% A simple example to demonstrate the HFSS-MATLAB-API. This script
+% optimizes a dipole antenna design to resonate at a specified frequency.
+% The initial length of the dipole is taken to be half the wavelength and
+% is optimized so that the simulated resonance frequency and the desired
+% resonance frequency are close.
+
+clc; clear all; close all;
+
+% Add paths to the required m-files.
+addpath('E:\Documents\Classes\Spring-2019\EM Modelling\Project\Interfacing codes\hfss-api-master\examples\1_Dipole'); % add manually the API root directory.
+hfssIncludePaths('E:\Documents\Classes\Spring-2019\EM Modelling\Project\Simulation_HFSS');
+
+% Antenna Parameters.
+fC   = 150e6;    % Frequency of Interest.
+Wv   = 3e8/fC;    % Wavelength.
+L    = Wv/2;    % Antenna Length.
+gapL = 5e-2;    % Antenna Gap.
+aRad = 2e-2;    % Antenna Radius.
+
+% Simulation Parameters.
+fLow    = 100e6;
+fHigh   = 200e6;
+nPoints = 201;
+
+% AirBox Parameters.
+AirX = Wv/2 + L;    % Include the antenna length.
+AirY = Wv/2; 
+AirZ = Wv/2;
+
+% Temporary Files. These files can be deleted after the optimization
+% is complete. We have to specify the complete path for all of them.
+% With pwd we save them in the current directory.
+tmpPrjFile    = [pwd, '\tmpDipole.hfss'];
+tmpDataFile   = [pwd, '\tmpData.m'];
+tmpScriptFile = [pwd, '\dipole_example.vbs'];
+
+% HFSS Executable Path.
+hfssExePath = 'E:\HFSSv15\HFSS15.0\Win64\hfss.exe';
+
+% Plot Colors.
+pltCols = ['b', 'r', 'k', 'g', 'm', 'c', 'y'];
+nCols = length(pltCols);
+
+% Optimization stop conditions.
+maxIters = 15;        % max # of iterations.
+Accuracy = 0.01;      % accuracy required (1%).
+hasConverged = false;
+
+fprintf('The Initial Dipole Length is %.2f meter...\n', L);
+for iIters = 1:maxIters
+    fprintf('Running iteration #%d...\n', iIters);
+    disp('Creating the Script File...');
+    
+    % Create a new temporary HFSS script file.
+    fid = fopen(tmpScriptFile, 'wt');
+    
+    % Create a new HFSS Project and insert a new design.
+    hfssNewProject(fid);
+    hfssInsertDesign(fid, 'without_balun');
+    
+    % Create the Dipole.
+    hfssDipole(fid, 'Dipole', 'X', [0, 0, 0], L, 2*aRad, gapL, 'meter');
+    
+    % Assign PE boundary to the antenna elements.
+    hfssAssignPE(fid, 'Antennas',  {'Dipole1', 'Dipole2'});
+    
+    % Create a Lumped Gap Source (a rectangle normal to the Y-axis)
+    hfssRectangle(fid, 'GapSource', 'Y', [-gapL/2, 0, -aRad], 2*aRad, ...
+        gapL, 'meter');
+    hfssAssignLumpedPort(fid, 'LumpedPort', 'GapSource', ...
+        [-gapL/2, 0, 0], [gapL/2, 0, 0], 'meter');
+    
+    % Add an AirBox.
+    hfssBox(fid, 'AirBox', [-AirX, -AirY, -AirZ]/2, [AirX, AirY, AirZ], ...
+        'meter');
+    hfssAssignRadiation(fid, 'ABC', 'AirBox');
+    
+    % Add a Solution Setup.
+    hfssInsertSolution(fid, 'Setup150MHz', fC/1e9);
+    hfssInterpolatingSweep(fid, 'Sweep100to200MHz', 'Setup150MHz', ...
+        fLow/1e9, fHigh/1e9, nPoints);
+    
+    % Save the project to a temporary file and solve it.
+    hfssSaveProject(fid, tmpPrjFile, true);
+    hfssSolveSetup(fid, 'Setup150MHz');
+    
+    % Export the Network data as an m-file.
+    hfssExportNetworkData(fid, tmpDataFile, 'Setup150MHz', ...
+        'Sweep100to200MHz');
+    
+    % Close the HFSS Script File.
+    fclose(fid);
+    
+    % Execute the Script by starting HFSS.
+    disp('Solving using HFSS...');
+    hfssExecuteScript(hfssExePath, tmpScriptFile);
+    
+    % Load the data by running the exported matlab file.
+    run(tmpDataFile);
+    tmpDataFile = [pwd, '\tmpData', num2str(iIters), '.m'];
+    
+    % The data items are in the f, S, Z variables now. 
+    % Plot the data.
+    disp('Solution Completed. Plotting Results for this iteration...');
+    figure(1);
+    hold on; grid on;
+    plot(f/1e6, 20*log10(abs(S)), pltCols(mod(iIters, nCols) + 1)); 
+    hold on;
+    xlabel('Frequency (MHz)');
+    ylabel('S_{11} (dB)');
+    axis([fLow/1e6, fHigh/1e6, -20, 0]);
+    
+    % Find the Resonance Frequency.
+    [Smin, iMin] = min(S);
+    fActual = f(iMin);
+    fprintf('Simulated Resonance Frequency: %.2f MHz\n', fActual/1e6);
+    
+    % Check if the required accuracy is met.
+    if (abs((fC - fActual)/fC) < Accuracy)
+        disp('Required Accuracy is met!');
+        fprintf('Optimized Antenna Length is %.2f meter.\n', L);
+        hasConverged = true;
+        break;
+    end
+    
+    % Adjust the antenna length in accordance with the discrepancy between
+    % the estimated and desired resonance frequency.
+    L = L*fActual/fC;
+
+    % Loop all over again ...
+    disp('Required accuracy not yet met ...');
+    fprintf('The new estimate for the dipole length is %.2f meter\n', L);
+end
+
+if (~hasConverged)
+    disp('Max Iterations exceeded. Optimization did NOT converge ...');
+end
+disp('');
+disp('');
+
+% Remove all the added paths.
+hfssRemovePaths('../../');
+rmpath('../../');
+##### SOURCE END #####
+--></body></html>

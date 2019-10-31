@@ -1,0 +1,123 @@
+$begin '$base_index$'
+  $begin 'properties'
+    all_levels=000000000000
+    time(year=000000002019, month=000000000003, day=000000000015, hour=000000000013, min=000000000035, sec=000000000028)
+    version=000000000000
+  $end 'properties'
+  $begin '$base_index$'
+    $index$(pos=000000004879, lin=000000000102, lvl=000000000000)
+  $end '$base_index$'
+$end '$base_index$'
+$begin 'SolutionBlock1'
+	ProductName=''
+	CircuitName='without_balun'
+	VersionID=4
+	PostProcess=false
+	LossLess=true
+	NextUniqueID=63
+	MoveBackwards=false
+	$begin 'VariationIDs'
+		Map(V='', ID=9)
+	$end 'VariationIDs'
+	$begin 'LinkedDataList'
+	$end 'LinkedDataList'
+	MeshAssemVersionID=8
+	$begin 'NextAssemVersionID'
+		NextUniqueID=9
+		MoveBackwards=false
+	$end 'NextAssemVersionID'
+	$begin 'MI'
+	$end 'MI'
+$end 'SolutionBlock1'
+$begin 'BlockMapName'
+	FileHeader='SolutionBlock1'
+	'SolutionKey(SimSetup=6, Instance=\'SetupDefinition\', Solution=-1, VersionID=0)'='SolutionBlock5'
+	'SolutionKey(SimSetup=6, Instance=\'SolutionDefinition\', Solution=12, VersionID=0)'='SolutionBlock4'
+	'SolutionKey(SimSetup=6, Instance=\'SolutionDefinition\', Solution=7, VersionID=0)'='SolutionBlock2'
+	'SolutionKey(SimSetup=6, Instance=\'SolutionDefinition\', Solution=8, VersionID=0)'='SolutionBlock3'
+$end 'BlockMapName'
+$begin 'SolutionBlock2'
+	SolutionName='AdaptivePass'
+	SolutionID=7
+	V=0
+	$begin 'States'
+	$end 'States'
+	$begin 'Definition'
+		SamplingInterpolation=false
+		Frequencies(150000000)
+		SolutionType=6
+		CenterFreq=0
+	$end 'Definition'
+	IsImported=false
+	IsTable=false
+	IsMatrixDataTable=false
+	SweepID=-1
+	KeepAllFastSweepFields=false
+$end 'SolutionBlock2'
+$begin 'SolutionBlock3'
+	SolutionName='LastAdaptive'
+	SolutionID=8
+	V=0
+	$begin 'States'
+	$end 'States'
+	$begin 'Definition'
+		SamplingInterpolation=false
+		Frequencies(150000000)
+		SolutionType=6
+		CenterFreq=0
+	$end 'Definition'
+	IsImported=false
+	IsTable=false
+	IsMatrixDataTable=false
+	SweepID=-1
+	KeepAllFastSweepFields=false
+$end 'SolutionBlock3'
+$begin 'SolutionBlock4'
+	SolutionName='Sweep100to200MHz'
+	SolutionID=12
+	V=0
+	$begin 'States'
+	$end 'States'
+	$begin 'Definition'
+		SamplingInterpolation=false
+		Frequencies(100000000, 100500000, 101000000, 101500000, 102000000, 102500000, 103000000, 103500000, 104000000, 104500000, 105000000, 105500000, 106000000, 106500000, 107000000, 107500000, 108000000, 108500000, 109000000, 109500000, 110000000, 110500000, 111000000, 111500000, 112000000, 112500000, 113000000, 113500000, 114000000, 114500000, 115000000, 115500000, 116000000, 116500000, 117000000, 117500000, 118000000, 118500000, 119000000, 119500000, 120000000, 120500000, 121000000, 121500000, 122000000, 122500000, 123000000, 123500000, 124000000, 124500000, 125000000, 125500000, 126000000, 126500000, 127000000, 127500000, 128000000, 128500000, 129000000, 129500000, 130000000, 130500000, 131000000, 131500000, 132000000, 132500000, 133000000, 133500000, 134000000, 134500000, 135000000, 135500000, 136000000, 136500000, 137000000, 137500000, 138000000, 138500000, 139000000, 139500000, 140000000, 140500000, 141000000, 141500000, 142000000, 142500000, 143000000, 143500000, 144000000, 144500000, 145000000, 145500000, 146000000, 146500000, 147000000, 147500000, 148000000, 148500000, 149000000, 149500000, 150000000, 150500000, 151000000, 151500000, 152000000, 152500000, 153000000, 153500000, 154000000, 154500000, 155000000, 155500000, 156000000, 156500000, 157000000, 157500000, 158000000, 158500000, 159000000, 159500000, 160000000, 160500000, 161000000, 161500000, 162000000, 162500000, 163000000, 163500000, 164000000, 164500000, 165000000, 165500000, 166000000, 166500000, 167000000, 167500000, 168000000, 168500000, 169000000, 169500000, 170000000, 170500000, 171000000, 171500000, 172000000, 172500000, 173000000, 173500000, 174000000, 174500000, 175000000, 175500000, 176000000, 176500000, 177000000, 177500000, 178000000, 178500000, 179000000, 179500000, 180000000, 180500000, 181000000, 181500000, 182000000, 182500000, 183000000, 183500000, 184000000, 184500000, 185000000, 185500000, 186000000, 186500000, 187000000, 187500000, 188000000, 188500000, 189000000, 189500000, 190000000, 190500000, 191000000, 191500000, 192000000, 192500000, 193000000, 193500000, 194000000, 194500000, 195000000, 195500000, 196000000, 196500000, 197000000, 197500000, 198000000, 198500000, 199000000, 199500000, 200000000)
+		SolutionType=5
+		CenterFreq=0
+	$end 'Definition'
+	IsImported=false
+	IsTable=false
+	IsMatrixDataTable=false
+	SweepID=0
+	KeepAllFastSweepFields=false
+$end 'SolutionBlock4'
+$begin 'SolutionBlock5'
+	SimSetupID=6
+	SimSetupName='Setup150MHz'
+	VersionID=0
+	IsImported=false
+	IsTable=false
+	SolveSetupID=0
+	MeshAssemVersionID=0
+	$begin 'NextAssemVersionID'
+		NextUniqueID=1
+		MoveBackwards=false
+	$end 'NextAssemVersionID'
+	$begin 'ADP'
+	$end 'ADP'
+	$begin 'SU'
+	$end 'SU'
+	$begin 'MI'
+	$end 'MI'
+$end 'SolutionBlock5'
+$begin '$index$'
+	$begin '$index$'
+		SolutionBlock2(pos=1275, lin=29, lvl=0)
+		SolutionBlock3(pos=1628, lin=47, lvl=0)
+		SolutionBlock4(pos=1981, lin=65, lvl=0)
+		SolutionBlock5(pos=4538, lin=83, lvl=0)
+		BlockMapName(pos=797, lin=22, lvl=0)
+		SolutionBlock1(pos=370, lin=1, lvl=0)
+		$base_index$(pos=0, lin=1, lvl=0)
+		$index$(pos=4879, lin=102, lvl=0)
+	$end '$index$'
+$end '$index$'
